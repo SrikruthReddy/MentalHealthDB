@@ -1,0 +1,17 @@
+.text {
+  padding: 0;
+  margin: auto;
+  max-width: 1000px;
+
+  /* flexbox */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column; /* Changed from row to column */
+  flex-wrap: nowrap; /* No wrapping needed when in column direction */
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+}

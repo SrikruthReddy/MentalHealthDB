@@ -1,169 +1,237 @@
-<app-navbar></app-navbar>
-<div class="background">
-  <p *ngFor="let alert of alerts">
-    <ngb-alert [type]="alert.type" (closed)="close(alert)">{{
-      alert.message
-    }}</ngb-alert>
-  </p>
-  <div id="form-container">
-    <div id="accordian">
-      <ngb-accordion #acc="ngbAccordion" activeIds="">
-        <ngb-panel title="Hospital Change">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.hospital_change</code></p>
-            <div id="form-container">
-              <ul>
-                <li>HOSPITAL_YEAR</li>
-                <li>HOSPITAL_MONTH</li>
-                <li>CITY</li>
-                <li>HOSPITAL</li>
-                <li>ARR_PREVALENCES</li>
-                <li>ARR_AFFECTED</li>
-                <li>ARR_CURED</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-        <ngb-panel title="Hospital Project">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.hospital_project</code></p>
-            <div id="form-container">
-              <ul>
-                <li>HOSPITAL_CODE</li>
-                <li>CITY</li>
-                <li>STATE_NAME</li>
-                <li>HOSPITAL_NAME</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-        <ngb-panel title="Hospital">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.city</code></p>
-            <div id="form-container">
-              <ul>
-                <li>CITY</li>
-                <li>CITY_NAME</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-        <ngb-panel title="Case Less 15">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.cases_less_15</code></p>
-            <div id="form-container">
-              <ul>
-                <li>CASE_YEAR</li>
-                <li>CASE_MONTH</li>
-                <li>CITY</li>
-                <li>HOSPITAL</li>
-                <li>ARR_DEL15</li>
-                <li>CITY_CT</li>
-                <li>WORK_CT</li>
-                <li>NAS_CT</li>
-                <li>FAMILY_CT</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-        <ngb-panel title="Case More 15">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.cases_more_15</code></p>
-            <div id="form-container">
-              <ul>
-                <li>CASE_YEAR</li>
-                <li>CASE_MONTH</li>
-                <li>CITY</li>
-                <li>HOSPITAL</li>
-                <li>ARR_DEL15</li>
-                <li>CITY_CT</li>
-                <li>WORK_CT</li>
-                <li>FAMILY_CT</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-        <ngb-panel title="Hospital Work">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.flight_work</code></p>
-            <div id="form-container">
-              <ul>
-                <li>FLIGHT_YEAR</li>
-                <li>FLIGHT_MONTH</li>
-                <li>DAY_OF_THE_MONTH</li>
-                <li>FL_DATE</li>
-                <li>ORIGIN_HOSPITAL</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-        <ngb-panel title="Work Event">
-          <ng-template ngbPanelContent>
-            <h4>Columns</h4>
-            <p>Table Name: <code>central.workevent</code></p>
-            <div id="form-container">
-              <ul>
-                <li>EVENT_YEAR</li>
-                <li>EVENT_MONTH</li>
-                <li>WORK_DURATION</li>
-                <li>HOSPITAL_CODE</li>
-                <li>EVENT_TYPE</li>
-                <li>EVENT_SEVERITY</li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngb-panel>
-      </ngb-accordion>
-    </div>
-  </div>
-  <div id="form-container">
-    <h2 style="color: white">Query Editor</h2>
-    <form id="form" [formGroup]="textAreaForm" (ngSubmit)="onClickSubmit()">
-      <textarea
-        cols="40"
-        rows="5"
-        class="tesxt-area"
-        formControlName="textArea"
-      ></textarea>
-      <input type="submit" value="Execute" />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mental Health DB</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRv6uK3p3UC5IB2k2zXt12vBbxMJ/6AP7KLSqO5+h"
+      crossorigin="anonymous"
+    />
+    <style>
+      .note {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #6c757d;
+        font-weight: bold;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 5px 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .background {
+        background-color: #343a40;
+        padding: 20px;
+      }
+      .card {
+        background-color: #ffffff;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .table th,
+      .table td {
+        background-color: #ffffff;
+      }
+      h2 {
+        color: #ffffff;
+        text-align: center;
+      }
+      .d-flex {
+        margin-top: 20px;
+      }
+      .pagination,
+      .form-select {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <app-navbar></app-navbar>
+    <div class="background">
       <p *ngFor="let alert of alerts">
         <ngb-alert [type]="alert.type" (closed)="close(alert)">{{
           alert.message
         }}</ngb-alert>
       </p>
-    </form>
-  </div>
-  <div id="form-container">
-    <h2 style="color: white">Query Results</h2>
-    <div class="table-responsive card">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th
-              style="background-color: white"
-              *ngFor="let col of resultsHeader"
-            >
-              {{ col }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of rows">
-            <td
-              style="background-color: white"
-              *ngFor="let col of resultsHeader"
-            >
-              {{ row[col] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div id="form-container">
+        <div id="accordian">
+          <ngb-accordion #acc="ngbAccordion" activeIds="">
+            <ngb-panel title="Hospital Change">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.hospital_change</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>HOSPITAL_YEAR</li>
+                    <li>HOSPITAL_MONTH</li>
+                    <li>CITY</li>
+                    <li>HOSPITAL</li>
+                    <li>ARR_PREVALENCES</li>
+                    <li>ARR_AFFECTED</li>
+                    <li>ARR_CURED</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Hospital Project">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.hospital_project</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>HOSPITAL_CODE</li>
+                    <li>CITY</li>
+                    <li>STATE_NAME</li>
+                    <li>HOSPITAL_NAME</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Hospital">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.city</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>CITY</li>
+                    <li>CITY_NAME</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Case Less 15">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.cases_less_15</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>CASE_YEAR</li>
+                    <li>CASE_MONTH</li>
+                    <li>CITY</li>
+                    <li>HOSPITAL</li>
+                    <li>CITY_CT</li>
+                    <li>WORK_CT</li>
+                    <li>NAS_CT</li>
+                    <li>FAMILY_CT</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Case More 15">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.cases_more_15</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>CASE_YEAR</li>
+                    <li>CASE_MONTH</li>
+                    <li>CITY</li>
+                    <li>HOSPITAL</li>
+                    <li>CITY_CT</li>
+                    <li>WORK_CT</li>
+                    <li>FAMILY_CT</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Hospital Work">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.flight_work</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>CASE_YEAR</li>
+                    <li>CASE_MONTH</li>
+                    <li>DAY_OF_THE_MONTH</li>
+                    <li>FL_DATE</li>
+                    <li>ORIGIN_HOSPITAL</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Work Event">
+              <ng-template ngbPanelContent>
+                <h4>Columns</h4>
+                <p>Table Name: <code>central.workevent</code></p>
+                <div id="form-container">
+                  <ul>
+                    <li>EVENT_YEAR</li>
+                    <li>EVENT_MONTH</li>
+                    <li>WORK_DURATION</li>
+                    <li>HOSPITAL_CODE</li>
+                    <li>EVENT_TYPE</li>
+                    <li>EVENT_SEVERITY</li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+        </div>
+      </div>
+      <div id="form-container">
+        <h2>Query Editor</h2>
+        <form id="form" [formGroup]="textAreaForm" (ngSubmit)="onClickSubmit()">
+          <textarea
+            cols="40"
+            rows="5"
+            class="tesxt-area"
+            formControlName="textArea"
+          ></textarea>
+          <input type="submit" value="Execute" />
+          <p *ngFor="let alert of alerts">
+            <ngb-alert [type]="alert.type" (closed)="close(alert)">{{
+              alert.message
+            }}</ngb-alert>
+          </p>
+        </form>
+      </div>
+      <div id="form-container">
+        <h2>Query Results</h2>
+        <div class="table-responsive card">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th
+                  style="background-color: white"
+                  *ngFor="let col of resultsHeader"
+                >
+                  {{ col }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of rows">
+                <td
+                  style="background-color: white"
+                  *ngFor="let col of resultsHeader"
+                >
+                  {{ row[col] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+    <div class="note">
+      Note: The app is currently not connected to the database.
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-HoH6xjNLHybZ0Kk33M5G6TXHMBMib5Mwt0fOcqbLg1QzU8zzr7JS2t/A1iE9BbPH"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+      integrity="sha384-mQ93VrP4dZIY2f20qp63Vv13Q4RQs8sWJ+j9Lgk5/saPf8dF7p7WV1p+tM1L1OZ/"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
